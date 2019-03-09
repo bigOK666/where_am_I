@@ -8,7 +8,7 @@ ros::ServiceClient client;
 // This function calls the command_robot service to drive the robot in the specified direction
 void drive_robot(float lin_x, float ang_z)
 {
-    // TODO: Request a service and pass the velocities to it to drive the robot
+    // DONE TODO: Request a service and pass the velocities to it to drive the robot
     ROS_INFO_STREAM("Drive the robot!");
     ball_chaser::DriveToTarget srv;
     srv.request.linear_x = lin_x;
@@ -27,16 +27,15 @@ void process_image_callback(const sensor_msgs::Image img)
     float lin_x;
     float ang_z;
     bool white_ball = false;
-    // TODO: Loop through each pixel in the image and check if there's a bright white one
+    // DONE TODO: Loop through each pixel in the image and check if there's a bright white one
     // Then, identify if this pixel falls in the left, mid, or right side of the image
     // Depending on the white ball position, call the drive_bot function and pass velocities to it
     // Request a stop when there's no white ball seen by the camera
-    for (int i=0; i < img.height * img.step; i++) {
-	//ROS_INFO_STREAM("Step is: " + std::to_string(img.step));
-	if (img.data[i] == white_pixel) {
+    for (int i=0; i < img.height * img.width; i++) {
+	if ((img.data[i*3] + img.data[i*3+1] + img.data[i*3+2]) == white_pixel*3) {// only when three chanels are white, the sum of three chanels is 255*3
 		white_ball = true;
-	    	pixel_position_divide = (float)(i%img.step)/img.step;
-		ROS_INFO_STREAM("i is: " + std::to_string(i) + "img.data[i] is: " + std::to_string(img.data[i]) + "position is: " + std::to_string(pixel_position_divide));
+	    	pixel_position_divide = (float)(i%img.width)/img.width;
+		ROS_INFO_STREAM("i is: " + std::to_string(i) + " img.data[i] is: " + std::to_string(img.data[i]) + " position is: " + std::to_string(pixel_position_divide));
 		break;    
 	}  
     }  
